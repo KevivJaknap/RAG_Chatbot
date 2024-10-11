@@ -1,6 +1,9 @@
 import streamlit as st
 import os
 import requests
+import atexit 
+
+save_path = r"C:\Users\vivek_pankaj\Desktop\DAP\dap_app_v1.0\src\files"
 
 # Define the different views
 def home_view():
@@ -21,7 +24,6 @@ def upload_view():
     st.title("Upload Files")
     uploaded_files = st.file_uploader("Choose PDF files", type="pdf", accept_multiple_files=True)
     save_button = st.button("Save")
-    save_path = r"C:\Users\vivek_pankaj\Desktop\DAP\dap_app_v1.0\src\files"
 
     #show all the files in save_path
     files_already_uploaded = os.listdir(save_path)
@@ -40,7 +42,13 @@ def upload_view():
             add_to_index(os.path.join(save_path, file.name))
         st.write("Files added to the index successfully!")
 
+def termination():
+    print("Deleting the files from storage")
+    files_already_uploaded = os.listdir(save_path)
+    for file in files_already_uploaded:
+        os.remove(os.path.join(save_path, file))
 
+atexit.register(termination)
 
 def chatbot_view():
     st.title("Chatbot")
